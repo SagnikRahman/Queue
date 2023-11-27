@@ -1,42 +1,66 @@
 #include <stdio.h>
-void swap(int* a, int* b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
+#include <stdbool.h>
+#define MAX_SIZE 100 // Define the maximum size of the queue
+int queue[MAX_SIZE];
+int front = -1;
+int rear = -1;
+// Function to check if the queue is empty
+bool isEmpty() {
+    return front == -1 && rear == -1;
 }
-int partition(int arr[], int low, int high) {
-    int pivot = arr[high]; 
-    int i = (low - 1); 
-    for (int j = low; j <= high - 1; j++) {
-        if (arr[j] < pivot) {
-            i++; 
-            swap(&arr[i], &arr[j]);
-        }
-    }
-    swap(&arr[i + 1], &arr[high]);
-    return (i + 1);
+// Function to check if the queue is full
+bool isFull() {
+    return rear == MAX_SIZE - 1;
 }
-void quickSort(int arr[], int low, int high) {
-    if (low < high) {
-        int pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
+// Function to add an element to the rear of the queue (enqueue)
+void enqueue(int data) {
+    if (isFull()) {
+        printf("Queue is full. Cannot enqueue.\n");
+        return;
+    }
+    if (isEmpty()) {
+        front = rear = 0;
+    } else {
+        rear++;
+    }
+    queue[rear] = data;
+}
+// Function to remove an element from the front of the queue (dequeue)
+void dequeue() {
+    if (isEmpty()) {
+        printf("Queue is empty. Cannot dequeue.\n");
+        return;
+    }
+    if (front == rear) {
+        front = rear = -1;
+    } else {
+        front++;
     }
 }
-int main() {
-    int n;
-    printf("Enter the number of elements: ");
-    scanf("%d", &n);
-    int arr[n];
-    printf("Enter %d elements:\n", n);
-    for (int i = 0; i < n; i++) {
-        scanf("%d", &arr[i]);
+// Function to display the elements of the queue
+void display() {
+    if (isEmpty()) {
+        printf("Queue is empty.\n");
+        return;
     }
-    quickSort(arr, 0, n - 1);
-    printf("Sorted array: ");
-    for (int i = 0; i < n; i++) {
-        printf("%d ", arr[i]);
+    printf("Queue elements: ");
+    for (int i = front; i <= rear; i++) {
+        printf("%d ", queue[i]);
     }
     printf("\n");
+}
+int main() {
+    enqueue(1);
+    enqueue(2);
+    enqueue(3);
+    enqueue(4);
+    enqueue(5);
+    display();
+    dequeue();
+    dequeue();
+    display();
+    enqueue(6);
+    enqueue(7);
+    display();
     return 0;
 }
